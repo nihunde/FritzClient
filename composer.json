@@ -1,0 +1,19 @@
+{
+    "name": "nihunde/fritzClient",
+    "description": "a minimal fritzBox Client in php",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Christian Klaeren",
+            "email": "christian.klaeren@gmail.com"
+        }
+    ],
+    "require-dev":
+    {"phpunit/phpunit": "3.7.27"},
+    "autoload": {
+        "psr-0": {
+            "FritzClientTest\\": "tests/",
+            "FritzClient\\": "src/"
+        }
+    }
+}
