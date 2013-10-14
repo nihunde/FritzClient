@@ -11,10 +11,11 @@ namespace FritzClient\Device\Action;
 class Password {
     protected  $challenge;
     protected  $password;
+
     public function __construct($challenge, $password)
     {
-        $this->challenge =  $challenge;
-        $this->password = $password;
+        $this->challenge =(string) $challenge;
+        $this->password =(string) $password;
     }
 
     public function __toString()
