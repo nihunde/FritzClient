@@ -14,6 +14,7 @@ use FritzClient\Device\Action\ExecutionException;
 use FritzClient\Device\Action\Login;
 use FritzClient\Device\Action\Logout;
 use FritzClient\Device\Action\Password;
+use FritzClient\Device\Action\SessionBased;
 use FritzClient\Device\ActionResultResolver;
 use FritzClient\Device\Result\Message;
 use FritzClient\Device\Result\Session;
@@ -38,10 +39,11 @@ class BasicAdapter implements  AdapterInterface {
         $this->send(new Login(new Password($challenge->getChallenge(), $this->password)));
         $session = $this->getLastResult();
         /** @var Session $session */
-        $this->sid = $session->getSessionId();
-        if ($this->sid === '0000000000000000') {
+        $sid = $session->getSessionId();
+        if ($sid === '0000000000000000') {
             throw new AdapterException('Login not successfull');
         }
+        $this->sid = $sid;
     }
 
 
@@ -68,11 +70,30 @@ class BasicAdapter implements  AdapterInterface {
 
     public function send(Command $command)
     {
-        echo $command->getEndpoint(). var_export($command->getParams(), true) . PHP_EOL;
-        $url = 'http://' . $this->host. '/'. $command->getEndpoint().'.lua?'. http_build_query($command->getParams());
-        $curlHandle = curl_init($url);
+        if ($command instanceof SessionBased  ) {
+            if (isset($this->sid)) {
+                $command->acceptSession($this->sid);
+            } else {
+                throw new ExecutionException('Please Login First');
+            }
+        }
+        $url = 'http://' . $this->host. '/'. $command->getEndpoint().'.lua';
+        $params =  $command->getParams();
+        if (isset($params[Command::ACTION]) && $params[Command::ACTION] === Command::ACTION_POST ) {
+            unset($params[Command::ACTION]);
+            $curlHandle = curl_init($url);
+            $fields = http_build_query($params);
+            curl_setopt($curlHandle,CURLOPT_POSTFIELDS, $fields);
+            curl_setopt($curlHandle, CURLOPT_POST,count($params));
+        } else {
+            $url .='?'. http_build_query($command->getParams());
+            $curlHandle = curl_init($url);
+
+        }
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+
         $result = curl_exec($curlHandle);
+        echo $url.' ';
         if (!isset($result)) {
             throw new AdapterException(curl_error($curlHandle));
         }
@@ -84,10 +105,10 @@ class BasicAdapter implements  AdapterInterface {
 
 
 
-    function __destruct()
+    function close()
     {
         if ($this->lastCommand instanceof Command) {
-            $this->send(new Logout($this->sid));
+            $this->send(new Logout());
         }
     }
 

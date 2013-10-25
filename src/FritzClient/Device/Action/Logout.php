@@ -8,13 +8,13 @@
 namespace FritzClient\Device\Action;
 
 
-class Logout implements Command{
+class Logout extends  SessionBased{
 
     protected $sid=null;
 
-    function __construct($sid)
+    public function acceptSession($sessionId)
     {
-        $this->sid = $sid;
+        $this->sid = $sessionId;
     }
 
 
@@ -33,4 +33,5 @@ class Logout implements Command{
     {
         return 'login_sid';
     }
+
 }
