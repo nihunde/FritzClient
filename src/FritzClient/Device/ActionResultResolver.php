@@ -11,6 +11,7 @@ namespace FritzClient\Device;
 use FritzClient\Device\Action\Challenge;
 use FritzClient\Device\Action\Login;
 use FritzClient\Device\Action\Logout;
+use FritzClient\Device\Action\SwitchOff;
 use FritzClient\Device\Action\SwitchOn;
 use FritzClient\Device\Result\ResultException;
 use FritzClient\Device\Result\Session;
@@ -27,6 +28,8 @@ class ActionResultResolver {
            case $command instanceof Challenge:
                return new Session($rawResult);
                break;
+           case $command instanceof SwitchOff:
+               //break intentionally omitted
            case $command instanceof SwitchOn:
                return new SwitchCircuit($rawResult);
                break;
