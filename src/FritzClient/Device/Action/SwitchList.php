@@ -15,11 +15,16 @@ class SwitchList extends SessionBased {
      */
     public function getParams()
     {
-        return array('switchcmd'=>'getswitchlist', 'sid'=>$this->sid, Command::ACTION=>Command::ACTION_POST);
+        return array(
+            'command'=>'AllOutletStates',
+            'sid'=>$this->sid,
+            'xhr' => '1',
+            Command::ACTION=>Command::ACTION_GET
+        );
     }
 
     public function getEndpoint()
     {
-        return 'webservices/homeautoswitch';
+        return 'net/home_auto_query';
     }
 }

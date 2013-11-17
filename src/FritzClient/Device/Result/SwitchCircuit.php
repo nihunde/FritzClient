@@ -25,7 +25,7 @@ class SwitchCircuit implements  Message {
 
     public function isOk()
     {
-        return empty($this->data);
+        return !empty($this->data);
     }
 
     public function getData()

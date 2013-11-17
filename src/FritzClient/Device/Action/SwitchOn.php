@@ -9,7 +9,7 @@ namespace FritzClient\Device\Action;
 
 
 class SwitchOn extends SessionBased{
-    protected $id=16;
+    protected $id = 16;
     protected $data = array();
     /**
      * @throws ExecutionException
@@ -25,11 +25,11 @@ class SwitchOn extends SessionBased{
         $this->id = $id;
         $this->data = array(
             'command'=>'SwitchOnOff',
-            'value_to_set'=>'1',
-            'id'=>$this->id,
-            'xhr'=>'1',
-            'sid'=> $this->sid,
-            Command::ACTION=>Command::ACTION_POST
+            'value_to_set' => '1',
+            'id' => $this->id,
+            'xhr' => '1',
+            'sid' => null, //gets injected later
+            Command::ACTION => Command::ACTION_POST
         );
     }
 

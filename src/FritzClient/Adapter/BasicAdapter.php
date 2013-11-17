@@ -67,7 +67,12 @@ class BasicAdapter implements  AdapterInterface {
     }
 
 
-
+    /**
+     * @param Command $command
+     * @return Message
+     * @throws ExecutionException
+     * @throws AdapterException
+     */
     public function send(Command $command)
     {
         if ($command instanceof SessionBased  ) {
@@ -93,7 +98,6 @@ class BasicAdapter implements  AdapterInterface {
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
 
         $result = curl_exec($curlHandle);
-        echo $url.' ';
         if (!isset($result)) {
             throw new AdapterException(curl_error($curlHandle));
         }

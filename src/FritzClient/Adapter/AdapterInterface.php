@@ -17,5 +17,5 @@ interface AdapterInterface
      * @return Message
      */
     public function getLastResult();
-
+    public function  close();
 }
